@@ -12,3 +12,6 @@
 .agents/
 .claude/
 graphify-out/
+
+# Automation scripts (contains passwords)
+*.exp
