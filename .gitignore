@@ -13,5 +13,12 @@
 .claude/
 graphify-out/
 
+# Node.js
+node_modules/
+npm-debug.log*
+
+# Application cache
+.cache/
+
 # Automation scripts (contains passwords)
 *.exp
