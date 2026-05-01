@@ -1,0 +1,30 @@
+#!/usr/bin/expect -f
+set timeout 60
+set password "nsM7H_!$?!Ye"
+
+spawn scp -o StrictHostKeyChecking=no /Users/binhnguyenthanh/Documents/OpenClaw/disable_bonjour.py root@180.93.137.94:/tmp/disable_bonjour.py
+expect "password:"
+send "$password\r"
+expect eof
+
+spawn ssh -o StrictHostKeyChecking=no root@180.93.137.94
+expect "password:"
+send "$password\r"
+expect "#"
+
+send "python3 /tmp/disable_bonjour.py\r"
+expect "#"
+
+send "systemctl stop openclaw.service\r"
+expect "#"
+send "pkill -9 -f node\r"
+expect "#"
+send "pkill -9 -f openclaw\r"
+expect "#"
+send "sleep 2\r"
+expect "#"
+send "systemctl start openclaw.service\r"
+expect "#"
+
+send "exit\r"
+expect eof

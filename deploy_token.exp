@@ -1,0 +1,31 @@
+#!/usr/bin/expect -f
+set timeout 60
+set password "nsM7H_!$?!Ye"
+
+spawn scp -o StrictHostKeyChecking=no /Users/binhnguyenthanh/Documents/OpenClaw/update_token.py root@180.93.137.94:/tmp/update_token.py
+expect "password:"
+send "$password\r"
+expect eof
+
+spawn ssh -o StrictHostKeyChecking=no root@180.93.137.94
+expect "password:"
+send "$password\r"
+expect "#"
+
+send "python3 /tmp/update_token.py\r"
+expect "#"
+
+send "systemctl restart openclaw.service\r"
+expect "#"
+
+send "sleep 5\r"
+expect "#"
+
+send "journalctl -u openclaw.service -n 20\r"
+expect "#"
+
+send "rm /tmp/update_token.py\r"
+expect "#"
+
+send "exit\r"
+expect eof

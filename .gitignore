@@ -1,0 +1,14 @@
+# Config files with tokens
+*.json
+*.b64
+
+# Binary files
+*.png
+
+# System files
+.DS_Store
+
+# Agent logs/internal
+.agents/
+.claude/
+graphify-out/

@@ -1,0 +1,19 @@
+#!/usr/bin/expect -f
+
+set timeout 30
+set password "nsM7H_!$?!Ye"
+set hostname "180.93.137.94"
+set user "root"
+
+spawn scp -o StrictHostKeyChecking=no $user@$hostname:/tmp/openclaw/openclaw-zalouser-qr-default.png /Users/binhnguyenthanh/Documents/OpenClaw/zalo_qr.png
+expect {
+    "yes/no" {
+        send "yes\r"
+        exp_continue
+    }
+    "*assword:*" {
+        send "$password\r"
+        exp_continue
+    }
+    eof
+}

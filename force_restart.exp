@@ -1,0 +1,24 @@
+#!/usr/bin/expect -f
+set timeout 60
+set password "nsM7H_!$?!Ye"
+
+spawn ssh -o StrictHostKeyChecking=no root@180.93.137.94
+expect "password:"
+send "$password\r"
+expect "#"
+
+send "pkill -f 'openclaw-gateway'\r"
+expect "#"
+send "sleep 2\r"
+expect "#"
+
+send "systemctl restart openclaw-gateway.service\r"
+expect "#"
+send "sleep 8\r"
+expect "#"
+
+send "journalctl -u openclaw-gateway.service -n 50\r"
+expect "#"
+
+send "exit\r"
+expect eof

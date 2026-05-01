@@ -1,0 +1,20 @@
+#!/usr/bin/expect -f
+
+set timeout 20
+set password "YOUR_VPS_PASSWORD"
+set hostname "180.93.137.94"
+set user "root"
+set cmd [lindex $argv 0]
+
+spawn ssh -o StrictHostKeyChecking=no $user@$hostname $cmd
+expect {
+    "yes/no" {
+        send "yes\r"
+        exp_continue
+    }
+    "*assword:*" {
+        send "$password\r"
+        exp_continue
+    }
+    eof
+}

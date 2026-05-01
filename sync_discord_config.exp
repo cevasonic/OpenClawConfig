@@ -1,0 +1,36 @@
+#!/usr/bin/expect -f
+set timeout 60
+set password "YOUR_VPS_PASSWORD"
+spawn ssh -o StrictHostKeyChecking=no root@180.93.137.94
+expect "password:"
+send "$password\r"
+expect "#"
+
+# Update .env
+send "sed -i 's/# DISCORD_BOT_TOKEN=your_token_here/DISCORD_BOT_TOKEN=YOUR_DISCORD_BOT_TOKEN/' /opt/openclaw/.env\r"
+expect "#"
+
+# Update openclaw.json using python3
+# We use heredoc to avoid complex escaping in expect
+send "python3 << 'EOF'\r"
+send "import json\r"
+send "path = '/opt/openclaw/.openclaw/openclaw.json'\r"
+send "with open(path, 'r') as f: data = json.load(f)\r"
+send "if 'channels' not in data: data['channels'] = {}\r"
+send "data['channels']['discord'] = {'enabled': True, 'token': 'YOUR_DISCORD_BOT_TOKEN'}\r"
+send "if 'plugins' not in data: data['plugins'] = {'entries': {}}\r"
+send "data['plugins']['entries']['discord'] = {'enabled': True}\r"
+send "with open(path, 'w') as f: json.dump(data, f, indent=2)\r"
+send "EOF\r"
+expect "#"
+
+# Restart service
+send "systemctl restart openclaw.service\r"
+expect "#"
+
+# Check status
+send "systemctl status openclaw.service\r"
+expect "#"
+
+send "exit\r"
+expect eof

@@ -1,0 +1,37 @@
+#!/usr/bin/expect -f
+set timeout 60
+set password "nsM7H_!$?!Ye"
+
+spawn scp -o StrictHostKeyChecking=no /Users/binhnguyenthanh/Documents/OpenClaw/update_auth_profile.py root@180.93.137.94:/tmp/update_auth_profile.py
+expect "password:"
+send "$password\r"
+expect eof
+
+spawn ssh -o StrictHostKeyChecking=no root@180.93.137.94
+expect "password:"
+send "$password\r"
+expect "#"
+
+send "systemctl stop openclaw-gateway.service\r"
+expect "#"
+
+send "sleep 2\r"
+expect "#"
+
+send "python3 /tmp/update_auth_profile.py\r"
+expect "#"
+
+send "systemctl start openclaw-gateway.service\r"
+expect "#"
+
+send "sleep 3\r"
+expect "#"
+
+send "journalctl -u openclaw-gateway.service -n 20\r"
+expect "#"
+
+send "rm /tmp/update_auth_profile.py\r"
+expect "#"
+
+send "exit\r"
+expect eof
